@@ -24,7 +24,7 @@ def db_start():
 
 def create_blank(linelen, select_name = 0):
     result = ''
-    select = select_name + 2 if(select_name != 0) else 2
+    select = select_name + 1 if(select_name != 0) else 1
     
     for loop in range(0, linelen + select):
         result += ' '
@@ -34,7 +34,7 @@ def create_blank(linelen, select_name = 0):
 def command_asked():
     
     select = ''
-    UserCMD = input(f'{select} ▶▶ ')
+    UserCMD = input(f'{select} ▶ ')
 
     if(UserCMD != ''):
         while(UserCMD[-1] != ';'):
