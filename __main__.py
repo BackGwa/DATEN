@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 #-*- coding:utf-8 -*-
 
+
 def main():
     print("\x1B[H\x1B[J")
     return_value = db_start()
     return 0 if(return_value == 0) else return_value
+
 
 def db_start():
     isCES = False
@@ -16,10 +18,12 @@ def db_start():
 
     return 0
 
+
 def daten(value):
     case = {'version' : 'v0.0',
             'channel' : 'Development'}
     return case[value]
+
 
 def create_blank(linelen, select_name = 0):
     result = ''
@@ -28,6 +32,7 @@ def create_blank(linelen, select_name = 0):
     for loop in range(0, linelen + select):
         result += ' '
     return result
+
 
 def command_asked():
     
@@ -38,9 +43,11 @@ def command_asked():
         while(UserCMD[-1] != ';'):
             linelen = create_blank(len(UserCMD), len(select))
             NewLine_input = input(f'{linelen} ↪ ')
-            UserCMD += ' ' + NewLine_input if(NewLine_input != ';') else NewLine_input
+            if(NewLine_input != ''):
+                UserCMD += ' ' + NewLine_input if(NewLine_input != ';') else NewLine_input
     
     return UserCMD
+
 
 if __name__ == "__main__":
     main()
