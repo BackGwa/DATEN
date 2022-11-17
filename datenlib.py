@@ -14,7 +14,8 @@ def daten(value):
     return case[value]
 
 def isHELP(command):
-    return True if(command == 'HELP') else False
+    commandlist = command.split(' ')
+    return True if('HELP' in commandlist[0]) else False
 
 def isDATA(command):
     commandlist = command.split(' ')
@@ -34,20 +35,38 @@ def PARSIGN(command):
     
     while(True):
         if(isHELP(command)):
-            print('''
-                  
-========================[ List of DATEN commands ]========================
+            if(command == 'HELP'):
+                print('''
+                    
+=============================[ List of DATEN commands ]=============================
 
-HELP        =>  Outputs all commands.
-DATA        =>  Database management commands.
-CLEAR       =>  Clears all content on the current screen.
-INFO        =>  Outputs information from the current DATEN software.
-QUIT & EXIT =>  Shutdown the DATEN software.
+    HELP {VALUE}        =>  Outputs all commands.
+    DATA {MODE} {VALUE} =>  Database management commands.
+    CLEAR               =>  Clears all content on the current screen.
+    INFO                =>  Outputs information from the current DATEN software.
+    QUIT & EXIT         =>  Shutdown the DATEN software.
 
-==========================================================================
+====================================================================================
 
 ''')
-            break
+                break
+            else:
+                commandlist = command.split(' ')
+                if(commandlist[1] == 'DATA'):
+                    print('''
+                          
+=============================[ Commands for DATA ]=============================
+
+    CREATE {FILE_NAME}  =>  Create a new database.
+    REMOVE {FILE_NAME}  =>  Removes an existing database.
+
+===============================================================================
+                          
+''')
+                else:
+                    print(syntaxerror(command, 'uhl'))
+                break
+            
         elif(isDATA(command)):
             commandlist = command.split(' ', 2)
             
@@ -132,7 +151,8 @@ def syntaxerror(command, errcode):
             'fre' : f'\'{command}\'\nError removing the following database files!',
             'ukf' : f'\'{command}\'\nThis database file does not exist!',
             'dtu' : f'\'{command}\'\nThis database file already exists!',
-            'dbb' : f'It is impossible to leave the database name blank!',}
+            'dbb' : f'It is impossible to leave the database name blank!',
+            'uhl' : f'{command}\nThe following help does not exist!'}
     
     return richtext('\n============================================================\n' + '↪ ' + case[errcode] + '\n============================================================', 'RED')
 
