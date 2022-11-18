@@ -182,6 +182,8 @@ def remove_data(name):
             print(syntaxerror(name, 'dbb'))
         elif(not os.path.isfile(f'{undername}.dt')):
             print(syntaxerror(name, 'ukf'))
+        elif(now_select == undername):
+            print(syntaxerror(name, 'sfd'))
         else:
             returnvalue = file_manage_system('remove', undername)
             if(returnvalue):
@@ -204,7 +206,8 @@ def syntaxerror(command, errcode):
             'dtu' : f'\'{command}\'\nThis database file already exists!',
             'dbb' : f'It is impossible to leave the database name blank!',
             'uhl' : f'{command}\nThe following help does not exist!',
-            'apr' : f'{command}\nAdditional factor not verified exist! These additional factor are not allowed!'}
+            'apr' : f'{command}\nAdditional factor not verified exist! These additional factor are not allowed!',
+            'sfd' : f'\'{command}\'\nThe currently selected database cannot be deleted!'}
     
     return richtext(f'\n{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}', 'RED')
 
