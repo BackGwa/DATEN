@@ -16,10 +16,10 @@ def main():
 def db_start():
     isCES = False
     
-    print(f"DATEN database management software\n{datenlib.daten('channel')} | {datenlib.daten('version')}\n")
+    print(datenlib.dateninfo())
     while(not isCES):
         DecodeCMD = command_asked()
-        result = datenlib.PARSIGN((DecodeCMD.upper()).replace(';', ''))
+        result = datenlib.PARSIGN((DecodeCMD.upper()))
         print(result if(result != '') else '')
 
     return 0
