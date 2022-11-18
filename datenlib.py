@@ -19,6 +19,10 @@ def daten(value):
     return case[value]
 
 
+def isSemitwo(command):
+    splitcommand = command.split(';')
+    return False if(len(splitcommand) > 2) else True
+
 def isHELP(command):
     commandlist = command.split(' ')
     return True if('HELP' in commandlist[0]) else False
@@ -41,88 +45,95 @@ def PARSIGN(command):
     result = ''
     
     while(True):
-        if(isHELP(command)):
-            if(command == 'HELP'):
-                print(help_str('all'))
-                break
-            else:
-                commandlist = command.split(' ')
-                if(commandlist[1] == 'DATA'):
-                    print(help_str('data'))
+        if(isSemitwo(command)):
+            command = command.replace(';', '')
+            
+            if(isHELP(command)):
+                if(command == 'HELP'):
+                    print(help_str('all'))
+                    break
                 else:
-                    print(syntaxerror(command, 'uhl'))
+                    commandlist = command.split(' ')
+                    if(commandlist[1] == 'DATA'):
+                        print(help_str('data'))
+                    else:
+                        print(syntaxerror(command, 'uhl'))
+                    break
+                
+            elif(isDATA(command)):
+                commandlist = command.split(' ', 2)
+                
+                if(len(commandlist) >= 2):
+                    if(commandlist[1] == 'CREATE'):
+                        if(len(commandlist) >= 3):
+                            create_data(commandlist[2])
+                        else:
+                            result = syntaxerror(command, 'dce')
+                        break
+                    
+                    elif(commandlist[1] == 'REMOVE'):
+                        if(len(commandlist) >= 3):
+                            remove_data(commandlist[2])
+                        else:
+                            result = syntaxerror(command, 'dce')
+                        break
+                    
+                    elif(commandlist[1] == 'LIST'):
+                        index = 0
+                        get_datalist = datalist()
+                        print(f'\n{line_creater(10)}[ List of databases ]{line_creater(10)}\n')
+                        if(len(get_datalist) != 0):
+                            for value in get_datalist:
+                                index += 1
+                                print(f'    [{index}] {value}')
+                        else:
+                            print(richtext('    [!] No databases currently exist.', 'YELLOW'))
+                        print(f'\n{line_creater(21 + 20)}\n')
+                        break
+                
+                    elif(commandlist[1] == 'SELECT'):
+                        if(len(commandlist) >= 3):
+                            data_select(commandlist[2])
+                        else:
+                            result = syntaxerror(command, 'dce')
+                        break
+                    
+                    elif(commandlist[1] == 'UNSELECT'):
+                        if(not len(commandlist) >= 3):
+                            data_unselect()
+                        else:
+                            result = syntaxerror(command, 'dce')
+                        break
+                    
+                    else:
+                        print(syntaxerror(command, 'ukn'))
+                        break
+                    
+                else:
+                    result = syntaxerror(command, 'ukn')
+                    break
+            
+            elif(isCLEAR(command)):
+                print('\x1B[H\x1B[J')
+                print(dateninfo())
                 break
             
-        elif(isDATA(command)):
-            commandlist = command.split(' ', 2)
+            elif(isINFO(command)):
+                print(dateninfo())
+                break
             
-            if(len(commandlist) >= 2):
-                if(commandlist[1] == 'CREATE'):
-                    if(len(commandlist) >= 3):
-                        create_data(commandlist[2])
-                    else:
-                        result = syntaxerror(command, 'dce')
-                    break
+            elif(isQUIT(command)):
+                print(richtext('↪ Saving all data currently...', 'GREEN'))
+                quit()
                 
-                elif(commandlist[1] == 'REMOVE'):
-                    if(len(commandlist) >= 3):
-                        remove_data(commandlist[2])
-                    else:
-                        result = syntaxerror(command, 'dce')
-                    break
-                
-                elif(commandlist[1] == 'LIST'):
-                    index = 0
-                    get_datalist = datalist()
-                    print(f'\n{line_creater(10)}[ List of databases ]{line_creater(10)}\n')
-                    if(len(get_datalist) != 0):
-                        for value in get_datalist:
-                            index += 1
-                            print(f'    [{index}] {value}')
-                    else:
-                        print(richtext('    [!] No databases currently exist.', 'YELLOW'))
-                    print(f'\n{line_creater(21 + 20)}\n')
-                    break
+            elif(command == ''):
+                break
             
-                elif(commandlist[1] == 'SELECT'):
-                    if(len(commandlist) >= 3):
-                        data_select(commandlist[2])
-                    else:
-                        result = syntaxerror(command, 'dce')
-                    break
-                
-                elif(commandlist[1] == 'UNSELECT'):
-                    if(not len(commandlist) >= 3):
-                        data_unselect()
-                    else:
-                        result = syntaxerror(command, 'dce')
-                    break
-                
-                else:
-                    print(syntaxerror(command, 'ukn'))
-                    break
-                
             else:
                 result = syntaxerror(command, 'ukn')
                 break
-        
-        elif(isCLEAR(command)):
-            print('\x1B[H\x1B[J')
-            break
-        
-        elif(isINFO(command)):
-            print(f"DATEN database management software\n{daten('channel')} | {daten('version')}\n")
-            break
-        
-        elif(isQUIT(command)):
-            print(richtext('↪ Saving all data currently...', 'GREEN'))
-            quit()
-            
-        elif(command == ''):
-            break
-        
         else:
-            result = syntaxerror(command, 'ukn')
+            print(syntaxerror(command, 'smt'))
             break
             
     return result
@@ -131,6 +142,8 @@ def PARSIGN(command):
 def create_data(name):
     if((name[len(name)-1:len(name)] == ' ')):
         print(syntaxerror(name, 'des'))
+    elif("'" in name or '"' in name):
+        print(syntaxerror(name, 'afe'))
     else:
         undername = name.replace(' ', '_')
         if(name[0:1].isdigit()):
@@ -207,7 +220,9 @@ def syntaxerror(command, errcode):
             'dbb' : f'It is impossible to leave the database name blank!',
             'uhl' : f'{command}\nThe following help does not exist!',
             'apr' : f'{command}\nAdditional factor not verified exist! These additional factor are not allowed!',
-            'sfd' : f'\'{command}\'\nThe currently selected database cannot be deleted!'}
+            'sfd' : f'\'{command}\'\nThe currently selected database cannot be deleted!',
+            'afe' : f'{command}\nDatabase name cannot contain quotation marks!',
+            'smt' : f'{command}\nYou have used more than one semicolon. These commands are not allowed!'}
     
     return richtext(f'\n{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}', 'RED')
 
@@ -249,6 +264,10 @@ def file_manage_system(file_mode, file_name):
         except:
             print(syntaxerror(file_name, 'fre'))
             return False
+        
+        
+def dateninfo():
+    return (f"DATEN database management software\n{daten('channel')} | {daten('version')}\n")
         
         
 def help_str(value):
