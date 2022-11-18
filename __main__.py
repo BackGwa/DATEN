@@ -4,6 +4,9 @@
 import datenlib
 
 
+global select
+select = ''
+
 def main():
     print('\x1B[H\x1B[J')
     return_value = db_start()
@@ -33,7 +36,7 @@ def create_blank(linelen, select_name = 0):
 
 def command_asked():
     
-    select = ''
+    global select
     UserCMD = input(f'{select} ▶ ')
 
     if(UserCMD != ''):
