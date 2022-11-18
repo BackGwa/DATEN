@@ -31,6 +31,9 @@ def isDATA(command):
     commandlist = command.split(' ')
     return True if(commandlist[0] == 'DATA') else False
 
+def isEXPORT(command):
+    return True if(command == 'EXPORT') else False
+
 def isCLEAR(command):
     return True if(command == 'CLEAR') else False
 
@@ -100,9 +103,12 @@ def PARSIGN(command):
                     
                     elif(commandlist[1] == 'UNSELECT'):
                         if(not len(commandlist) >= 3):
-                            data_unselect()
+                            if(now_select != ''):
+                                data_unselect()
+                            else:
+                                result = (richtext('[!] Database is not already selected\n', 'YELLOW'))
                         else:
-                            result = syntaxerror(command, 'dce')
+                            result = syntaxerror(command, 'apr')
                         break
                     
                     else:
@@ -112,6 +118,17 @@ def PARSIGN(command):
                 else:
                     result = syntaxerror(command, 'ukn')
                     break
+            
+            elif(isEXPORT(command)):
+                commandlist = command.split(' ')
+                if(len(commandlist) > 3):
+                    result = syntaxerror(command, 'apr')
+                else:
+                    if(now_select != ''):
+                        export(now_select)
+                    else:
+                        result = syntaxerror(command, 'epe')
+                break
             
             elif(isCLEAR(command)):
                 print('\x1B[H\x1B[J')
@@ -222,9 +239,12 @@ def syntaxerror(command, errcode):
             'apr' : f'{command}\nAdditional factor not verified exist! These additional factor are not allowed!',
             'sfd' : f'\'{command}\'\nThe currently selected database cannot be deleted!',
             'afe' : f'{command}\nDatabase name cannot contain quotation marks!',
-            'smt' : f'{command}\nYou have used more than one semicolon. These commands are not allowed!'}
+            'smt' : f'{command}\nYou have used more than one semicolon. These commands are not allowed!',
+            'epe' : f'No database defined to export!',
+            'ctu' : f'File {command} already exists! The export operation has been canceled to prevent file conflicts!',
+            'cse' : f'Error saving file {command}!'}
     
-    return richtext(f'\n{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}', 'RED')
+    return richtext(f'{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}\n', 'RED')
 
 
 def richtext(text, color):
@@ -269,6 +289,19 @@ def file_manage_system(file_mode, file_name):
 def dateninfo():
     return (f"DATEN database management software\n{daten('channel')} | {daten('version')}\n")
         
+   
+def export(select_db, sav_path = f'{now_select}.csv'):
+    if(select_db == ''):
+        print(syntaxerror(':: EXPORT ERROR ::', 'epe'))
+    elif(os.path.isfile(sav_path)):
+        print(syntaxerror(sav_path, 'ctu'))
+    else:
+        try:
+            print(richtext(f'↪ Successfully exported to csv file! => \'{now_select}\'', 'GREEN'))
+        except:
+            print(syntaxerror(sav_path, 'cse'))
+        
+    return None
         
 def help_str(value):
     if(value == 'all'):
@@ -276,11 +309,13 @@ def help_str(value):
                     
 {line_creater(30)}[ List of DATEN commands ]{line_creater(30)}
 
-    HELP [VALUE]        =>  Outputs all commands.
-    DATA [MODE] [VALUE] =>  Database management commands.
-    CLEAR               =>  Clears all content on the current screen.
-    INFO                =>  Outputs information from the current DATEN software.
-    QUIT & EXIT         =>  Shutdown the DATEN software.
+    HELP    [-VALUE]            =>  Outputs all commands.
+    DATA    [OPTION] [VALUE]    =>  Database management commands.
+    VIEW    [OPTION]            =>  Displays the contents of the currently selected database.
+    EXPORT  [-VALUE] [-VALUE]   =>  Export the database to the csv extension.
+    CLEAR                       =>  Clears all content on the current screen.
+    INFO                        =>  Outputs information from the current DATEN software.
+    QUIT & EXIT                 =>  Shutdown the DATEN software.
 
 {line_creater(26 + 60)}
 ''')
