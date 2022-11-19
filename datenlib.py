@@ -32,7 +32,8 @@ def isDATA(command):
     return True if(commandlist[0] == 'DATA') else False
 
 def isEXPORT(command):
-    return True if(command == 'EXPORT') else False
+    commandlist = command.split(' ')
+    return True if('EXPORT' in commandlist[0]) else False
 
 def isCLEAR(command):
     return True if(command == 'CLEAR') else False
@@ -121,13 +122,43 @@ def PARSIGN(command):
             
             elif(isEXPORT(command)):
                 commandlist = command.split(' ')
-                if(len(commandlist) > 3):
-                    result = syntaxerror(command, 'apr')
-                else:
-                    if(now_select != ''):
-                        export(now_select)
+                if(len(commandlist) >= 2):
+                    if(commandlist[1] == ''):
+                        print(syntaxerror(command, 'epe'))
                     else:
-                        result = syntaxerror(command, 'epe')
+                        undername = commandlist[1].replace(' ', '_')
+                        if((commandlist[1][len(commandlist[1]) - 1:len(commandlist[1])]) == ''):
+                            print(syntaxerror(command, 'dbb'))
+                        elif(not os.path.isfile(f'{undername}.dt')):
+                            print(syntaxerror(command, 'ukf'))
+                        else:
+                            if(len(commandlist) == 3):
+                                try:
+                                    os.path.dir(commandlist[2])
+                                    if(not os.path.isdir(commandlist[2])):
+                                        print(syntaxerror(command, 'pua'))
+                                    elif('"' in commandlist[2]):
+                                        print(syntaxerror(command, 'tai'))
+                                    else:
+                                        export_path = commandlist[2].replace("'", '')
+                                        if(os.path.isfile(export_path)):
+                                            print(syntaxerror(export_path, 'ctu'))
+                                        else:
+                                            export(undername, export_path)
+                                except:
+                                    print(syntaxerror(command, 'pua'))
+                            elif(len(commandlist) > 3):
+                                print(syntaxerror(command, 'apr'))
+                            elif(len(commandlist) == 2):
+                                export(undername)
+                            else:
+                                print(syntaxerror(command, 'cse'))
+                else:
+                    if(now_select == ''):
+                        print(syntaxerror(command, 'epe'))
+                    else:
+                        export(now_select)
+                        
                 break
             
             elif(isCLEAR(command)):
@@ -179,6 +210,8 @@ def create_data(name):
 def data_select(name):
     if((name[len(name)-1:len(name)] == ' ')):
         print(syntaxerror(name, 'des'))
+    elif("'" in name or '"' in name):
+        print(syntaxerror(name, 'afe'))
     else:
         undername = name.replace(' ', '_')
         if(name[0:1].isdigit()):
@@ -204,6 +237,8 @@ def data_unselect():
 def remove_data(name):
     if((name[len(name)-1:len(name)] == ' ')):
         print(syntaxerror(name, 'des'))
+    elif("'" in name or '"' in name):
+        print(syntaxerror(name, 'afe'))
     else:
         undername = name.replace(' ', '_')
         if(name[0:1].isdigit()):
@@ -239,10 +274,12 @@ def syntaxerror(command, errcode):
             'apr' : f'{command}\nAdditional factor not verified exist! These additional factor are not allowed!',
             'sfd' : f'\'{command}\'\nThe currently selected database cannot be deleted!',
             'afe' : f'{command}\nDatabase name cannot contain quotation marks!',
+            'tai' : f'{command}\nDouble quotes are not allowed when enclosing a path name! Please use small quotation marks!',
             'smt' : f'{command}\nYou have used more than one semicolon. These commands are not allowed!',
             'epe' : f'No database defined to export!',
             'ctu' : f'File {command} already exists! The export operation has been canceled to prevent file conflicts!',
-            'cse' : f'Error saving file {command}!'}
+            'cse' : f'Error saving file {command}!',
+            'pua' : f'The path of the file to be saved is invalid!'}
     
     return richtext(f'{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}\n', 'RED')
 
@@ -290,14 +327,22 @@ def dateninfo():
     return (f"DATEN database management software\n{daten('channel')} | {daten('version')}\n")
         
    
-def export(select_db, sav_path = f'{now_select}.csv'):
+def export(select_db, sav_path = ''):
+    
+    if(sav_path == ''):
+        sav_path = (f'{select_db}.csv')
+    else:
+        sav_path = (f'{now_select}.csv')
+    
     if(select_db == ''):
         print(syntaxerror(':: EXPORT ERROR ::', 'epe'))
     elif(os.path.isfile(sav_path)):
         print(syntaxerror(sav_path, 'ctu'))
     else:
         try:
-            print(richtext(f'↪ Successfully exported to csv file! => \'{now_select}\'', 'GREEN'))
+            file = open(f'sav_path', mode = 'x', encoding = 'UTF-8')
+            file.close()
+            print(richtext(f'↪ Successfully exported to csv file! ==> \'{sav_path}\'', 'GREEN'))
         except:
             print(syntaxerror(sav_path, 'cse'))
         
@@ -312,7 +357,7 @@ def help_str(value):
     HELP    [-VALUE]            =>  Outputs all commands.
     DATA    [OPTION] [VALUE]    =>  Database management commands.
     VIEW    [OPTION]            =>  Displays the contents of the currently selected database.
-    EXPORT  [-VALUE] [-VALUE]   =>  Export the database to the csv extension.
+    EXPORT  [-VALUE] [-PATH]    =>  Export the database to the csv extension.
     CLEAR                       =>  Clears all content on the current screen.
     INFO                        =>  Outputs information from the current DATEN software.
     QUIT & EXIT                 =>  Shutdown the DATEN software.
