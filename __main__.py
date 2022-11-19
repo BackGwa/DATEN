@@ -17,12 +17,15 @@ def db_start():
     isCES = False
     
     print(datenlib.dateninfo())
-    while(not isCES):
-        DecodeCMD = command_asked()
-        result = datenlib.PARSIGN((DecodeCMD.upper()))
-        print(result if(result != '') else '')
-
-    return 0
+    
+    try:
+        while(not isCES):
+            DecodeCMD = command_asked()
+            result = datenlib.PARSIGN((DecodeCMD.upper()))
+            print(result if(result != '') else '')
+        return 0
+    except:
+        return -1
 
 
 def create_blank(linelen, select_name = 0):
