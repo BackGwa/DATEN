@@ -24,13 +24,13 @@
 
 - Returns the help information that matches the parameter value.
 
-<br>
+<hr>
 
 ### **`CLEAR`**
 #### **Features**
 - Clears all content on the current screen.
 
-<br>
+<hr>
 
 ### **`QUIT`**
 #### **Features**
