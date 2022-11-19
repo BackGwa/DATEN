@@ -134,19 +134,22 @@ def PARSIGN(command):
                         else:
                             if(len(commandlist) == 3):
                                 try:
-                                    os.path.dir(commandlist[2])
-                                    if(not os.path.isdir(commandlist[2])):
-                                        print(syntaxerror(command, 'pua'))
-                                    elif('"' in commandlist[2]):
-                                        print(syntaxerror(command, 'tai'))
+                                    if('.csv' in commandlist[2]):
+                                        print(syntaxerror(command, 'nnn'))
                                     else:
-                                        export_path = commandlist[2].replace("'", '')
-                                        if(os.path.isfile(export_path)):
-                                            print(syntaxerror(export_path, 'ctu'))
+                                        if(not os.path.isdir(commandlist[2])):
+                                            print(syntaxerror(command, 'pua'))
+                                        elif('"' in commandlist[2]):
+                                            print(syntaxerror(command, 'tai'))
                                         else:
-                                            export(undername, export_path)
+                                            export_path = commandlist[2].replace("'", '')
+                                            if(os.path.isfile(export_path)):
+                                                print(syntaxerror(export_path, 'ctu'))
+                                            else:
+                                                export(undername, export_path)
                                 except:
                                     print(syntaxerror(command, 'pua'))
+                                    
                             elif(len(commandlist) > 3):
                                 print(syntaxerror(command, 'apr'))
                             elif(len(commandlist) == 2):
@@ -279,7 +282,8 @@ def syntaxerror(command, errcode):
             'epe' : f'No database defined to export!',
             'ctu' : f'File {command} already exists! The export operation has been canceled to prevent file conflicts!',
             'cse' : f'Error saving file {command}!',
-            'pua' : f'The path of the file to be saved is invalid!'}
+            'pua' : f'The path of the file to be saved is invalid!',
+            'nnn' : f'{command}\nEnter directory path only! Paths containing file names are not allowed!'}
     
     return richtext(f'{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}\n', 'RED')
 
@@ -327,12 +331,12 @@ def dateninfo():
     return (f"DATEN database management software\n{daten('channel')} | {daten('version')}\n")
         
    
-def export(select_db, sav_path = ''):
+def export(select_db = now_select, sav_path = ''):
     
     if(sav_path == ''):
         sav_path = (f'{select_db}.csv')
     else:
-        sav_path = (f'{now_select}.csv')
+        sav_path = sav_path + (f'/{select_db}.csv')
     
     if(select_db == ''):
         print(syntaxerror(':: EXPORT ERROR ::', 'epe'))
