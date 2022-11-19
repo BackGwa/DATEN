@@ -20,9 +20,7 @@
 
 <br>
 
-> **PARAMETER**
-
-**[-VALUE]** :: `STR`
+> **PARAMETER** || **[-VALUE]** :: `STR`
 
 - Returns the help information that matches the parameter value.
 
