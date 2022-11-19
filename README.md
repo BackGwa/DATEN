@@ -24,7 +24,19 @@
 
 - Returns the help information that matches the parameter value.
 
-<hr><br>
+<br>
+
+### **`CLEAR`**
+#### **Features**
+- Clears all content on the current screen.
+
+<br>
+
+### **`QUIT`**
+#### **Features**
+- Shutdown the DATEN software.
+
+<hr>
 
 ## **license**
 <br>
