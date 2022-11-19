@@ -12,8 +12,7 @@
 <br>
 
 > '-' Parameters containing symbols are fields that do not need to be entered!
-
-<br><hr>
+<hr>
 
 ### **`HELP [-VALUE]`**
 #### **Features**
