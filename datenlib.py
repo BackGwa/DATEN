@@ -340,7 +340,7 @@ def export(select_db, sav_path = ''):
         print(syntaxerror(sav_path, 'ctu'))
     else:
         try:
-            file = open(f'sav_path', mode = 'x', encoding = 'UTF-8')
+            file = open(f'{sav_path}', mode = 'x', encoding = 'UTF-8')
             file.close()
             print(richtext(f'↪ Successfully exported to csv file! ==> \'{sav_path}\'', 'GREEN'))
         except:
