@@ -16,14 +16,12 @@
 <br><hr>
 
 ### **`HELP [-VALUE]`**
-<br>
-
 #### **Features**
 - Outputs all commands.
 
 <br>
 
->> **PARAMETER**
+> **PARAMETER**
 
 **[-VALUE]** :: `STR`
 
