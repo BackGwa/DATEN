@@ -27,6 +27,10 @@ def isDATA(command):
     commandlist = command.split(' ')
     return True if(commandlist[0] == 'DATA') else False
 
+def isVIEW(command):
+    commandlist = command.split(' ')
+    return True if('VIEW' in commandlist[0]) else False
+
 def isIMPORT(command):
     commandlist = command.split(' ')
     return True if('IMPORT' in commandlist[0]) else False
@@ -42,7 +46,7 @@ def isINFO(command):
     return True if(command == 'INFO') else False
 
 def isQUIT(command):
-    return True if(command == 'QUIT' or command == 'EXIT') else False
+    return True if(command == 'QUIT' or command == 'EXIT' or command == 'DEC') else False
 
 
 def PARSIGN(command):
@@ -119,6 +123,9 @@ def PARSIGN(command):
                 else:
                     result = dtspt.syntaxerror(command, 'ukn')
                     break
+            
+            elif(isVIEW(command)):
+                return
             
             elif(isIMPORT(command)):
                 return
