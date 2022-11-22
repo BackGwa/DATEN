@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+#-*- coding:utf-8 -*-
+
 COLOR_RED = '\033[91m'
 COLOR_GREEN = '\033[92m'
 COLOR_YELLOW = '\033[93m'
@@ -55,7 +58,7 @@ def help_str(value):
 
     HELP    [-VALUE]                    =>  Outputs all commands.
     DATA    [OPTION] [VALUE]            =>  Database management commands.
-    VIEW    [OPTION]                    =>  Displays the contents of the currently selected database.
+    VIEW    [OPTION]                    =>  Displays the contents of the currently selected database. {richtext('{The command is not currently implemented!}', 'RED')}
     IMPORT  [PATH] [-VALUE] [-OPTION]   =>  Gets the database of the .csv extension. {richtext('{The command is not currently implemented!}', 'RED')}
     EXPORT  [-VALUE] [-PATH]            =>  Export the database to the .csv extension.
     CLEAR                               =>  Clears all content on the current screen.
