@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 #-*- coding:utf-8 -*-
 
-COLOR_RED = '\033[91m'
-COLOR_GREEN = '\033[92m'
-COLOR_YELLOW = '\033[93m'
-COLOR_END = '\033[0m'
+def richtext(text, color):
+    return '\033[91m' + text + '\033[0m' if(color == 'RED') else '\033[93m' + text + '\033[0m' if(color == 'YELLOW') else '\033[92m' + text + '\033[0m' if(color == 'GREEN') else '\033[0m'
+    
+
+def line_creater(value):
+    result = ''
+    for i in range(0, value):
+        result += '='
+    return result
+
+
+def daten_info(value):
+    case = {'version' : 'v0.0',
+            'channel' : 'Development'} 
+    return case[value]
 
 
 def syntaxerror(command, errcode):
@@ -38,23 +49,7 @@ def syntaxerror(command, errcode):
     return richtext(f'{line_creater(60)}\n' + '↪ ' + case[errcode] + f'\n{line_creater(60)}\n', 'RED')
 
 
-def richtext(text, color):
-    if(color == 'RED'):
-        return COLOR_RED + text + COLOR_END
-    elif(color == 'YELLOW'):
-        return COLOR_YELLOW + text + COLOR_END
-    elif(color == 'GREEN'):
-        return COLOR_GREEN + text + COLOR_END
-
-
-def line_creater(value):
-    result = ''
-    for i in range(0, value):
-        result += '='
-    return result
-
-
-def help_str(value):
+def help_command(value):
     if(value == 'all'):
         return (f'''
                 
